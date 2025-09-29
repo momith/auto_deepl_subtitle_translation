@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  subtitle-translator:
+    build: .
+    container_name: subtitle-translator
+    restart: always
+    environment:
+      - WATCH_DIR=/data
+      - TARGET_LANG=TH
+      - DEEPL_API_KEY=your_api_key
+      - SLEEP_INTERVAL=30
+    volumes:
+      - /media/mo/myssd/mymovies:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
