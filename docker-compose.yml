@@ -6,12 +6,13 @@ services:
     container_name: subtitle-translator
     restart: always
     environment:
-      - WATCH_DIR=/data
+      - WATCH_DIRS=/data1,/data2
       - TARGET_LANG=TH
       - DEEPL_API_KEY=your_api_key
       - SLEEP_INTERVAL=30
     volumes:
-      - /media/mo/myssd/mymovies:/data
+      - "/media/mo/myssd1/mymovies:/data1"
+      - "/media/mo/myssd2/myothermovies:/data2"
     logging:
       driver: "json-file"
       options:

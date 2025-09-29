@@ -9,7 +9,8 @@ import deepl
 
 
 # --- Config (from environment variables) ---
-WATCH_DIR = os.getenv("WATCH_DIR", "/path/to/directory/to/watch")
+WATCH_DIRS = os.getenv("WATCH_DIRS", "/path/to/directory/to/watch")
+WATCH_DIRS = [d.strip() for d in WATCH_DIRS.split(",") if d.strip()]
 TARGET_LANG = os.getenv("TARGET_LANG", "TH") # for Thai language (see DeepL docs)
 DEEPL_API_KEY = os.getenv("DEEPL_API_KEY", "your_default_key") # (see DeepL docs)
 SLEEP_INTERVAL = int(os.getenv("SLEEP_INTERVAL", "10")) # the higher the less responsive. the lower the higher "load" on the system.
@@ -163,11 +164,12 @@ def process_file(file_path: Path):
 
 
 # --- Watchdog ---
-def watch_folder():
+def watch_folders():
     while True:
-        for file in find_subtitle_files(WATCH_DIR):
-            if not is_translated(file):
-                process_file(file)
+        for watch_dir in WATCH_DIRS:
+            for file in find_subtitle_files(watch_dir):
+                if not is_translated(file):
+                    process_file(file)
         time.sleep(SLEEP_INTERVAL)
 
 
@@ -177,7 +179,7 @@ def test_single_file(file_path: str):
 
 
 if __name__ == "__main__":
-    watch_folder()
+    watch_folders()
     #test_single_file("FullFile_Test.srt")
 
 
