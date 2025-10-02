@@ -10,6 +10,7 @@ services:
       - TARGET_LANG=TH
       - DEEPL_API_KEY=your_api_key
       - SLEEP_INTERVAL=30
+      - WATCH_REGEX=(?i)_synced
     volumes:
       - "/media/mo/myssd1/mymovies:/data1"
       - "/media/mo/myssd2/myothermovies:/data2"

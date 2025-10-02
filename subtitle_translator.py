@@ -6,6 +6,7 @@ import requests
 from pathlib import Path
 from bs4 import BeautifulSoup
 import deepl
+import re
 
 
 # --- Config (from environment variables) ---
@@ -15,6 +16,12 @@ TARGET_LANG = os.getenv("TARGET_LANG", "TH") # for Thai language (see DeepL docs
 DEEPL_API_KEY = os.getenv("DEEPL_API_KEY", "your_default_key") # (see DeepL docs)
 SLEEP_INTERVAL = int(os.getenv("SLEEP_INTERVAL", "10")) # the higher the less responsive. the lower the higher "load" on the system.
 
+# Optional regex to filter files by filename
+WATCH_REGEX = os.getenv("WATCH_REGEX", None)
+if WATCH_REGEX:
+    WATCH_REGEX_COMPILED = re.compile(WATCH_REGEX)
+else:
+    WATCH_REGEX_COMPILED = None
 
 # --- Config (hardcoded variables) ---
 FILE_EXTENSIONS = [".srt", ".ass"]
@@ -44,6 +51,8 @@ def find_subtitle_files(base_dir: str):
     for root, _, files in os.walk(base_dir):
         for f in files:
             if any(f.lower().endswith(ext) for ext in FILE_EXTENSIONS) and TRANSLATED_SUFFIX not in f:
+                if WATCH_REGEX_COMPILED and not WATCH_REGEX_COMPILED.search(f):
+                    continue
                 yield Path(root) / f
 
 
